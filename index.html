@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cooolinho.de - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.scss">
+</head>
+<body>
+    <div class="scanlines"></div>
+
+    <div class="terminal-container">
+        <header class="terminal-header">
+            <div class="buttons">
+                <span class="btn-close"></span>
+                <span class="btn-minimize"></span>
+                <span class="btn-maximize"></span>
+            </div>
+            <div class="title">cooolinho@portfolio:~</div>
+        </header>
+
+        <main class="terminal-body">
+            <section class="hero-section">
+                <p class="greeting">
+                    <span class="prompt">$</span> <span id="typing-text"></span><span class="cursor">_</span>
+                </p>
+            </section>
+
+            <section class="about-section">
+                <p class="command"><span class="prompt">$</span> cat about.md</p>
+                <div class="output">
+                    <h2>Hallo, ich bin cooolinho!</h2>
+                    <p>Ich bin ein leidenschaftlicher Entwickler mit Fokus auf moderne Web-Technologien.</p>
+                    <br>
+                    <p><span class="keyword">Skills:</span></p>
+                    <ul class="skills-list">
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">Frontend:</span> HTML, CSS/SCSS, JavaScript, React</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">Backend:</span> Node.js, Python</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">DevOps:</span> Docker, Git, CI/CD</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="projects-section">
+                <p class="command"><span class="prompt">$</span> git log --oneline</p>
+                <div class="output">
+                    <ul class="git-log">
+                        <li><span class="hash">a1b2c3d</span> <span class="msg">feat: Portfolio Website (Vite + SCSS)</span></li>
+                        <li><span class="hash">e4f5g6h</span> <span class="msg">feat: E-Commerce Dashboard</span></li>
+                        <li><span class="hash">i7j8k9l</span> <span class="msg">fix: API Endpoint Optimierung</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="contact-section">
+                <p class="command"><span class="prompt">$</span> cat contact.txt</p>
+                <div class="output">
+                    <p>&gt; E-Mail: <a href="mailto:hallo@cooolinho.de">hallo@cooolinho.de</a></p>
+                    <p>&gt; GitHub: <a href="https://github.com/cooolinho" target="_blank">github.com/cooolinho</a></p>
+                    <p>&gt; LinkedIn: <a href="#" target="_blank">linkedin.com/in/cooolinho</a></p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
