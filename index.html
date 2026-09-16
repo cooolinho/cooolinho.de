@@ -1,21 +1,100 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de-DE">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colin Deepe – Software Engineer</title>
-    <meta name="description" content="Colin Deepe – Software Engineer / Fullstack Developer mit Fokus auf E-Commerce, Laravel, Filament und KI-gestützte Entwicklung mit Claude.">
+    <title>Colin Deepe – Software Engineer &amp; Fullstack Developer</title>
+    <meta name="description" content="Colin Deepe – Software Engineer &amp; Fullstack Developer mit über 10 Jahren E-Commerce-Praxis. Fokus: Laravel, Filament und KI-gestützte Entwicklung mit Claude Code.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <meta name="author" content="Colin Deepe">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="dark">
+    <link rel="canonical" href="https://cooolinho.de/">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Colin Deepe – Software Engineer &amp; Fullstack Developer">
+    <meta property="og:description" content="Software Engineer &amp; Fullstack Developer mit über 10 Jahren E-Commerce-Praxis. Fokus: Laravel, Filament und KI-gestützte Entwicklung mit Claude Code.">
+    <meta property="og:url" content="https://cooolinho.de/">
+    <meta property="og:site_name" content="Colin Deepe">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:image" content="https://cooolinho.de/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Monogramm CD mit dem Schriftzug Colin Deepe – Software Engineer / Fullstack Developer im Terminal-Design">
+    <meta property="profile:first_name" content="Colin">
+    <meta property="profile:last_name" content="Deepe">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:alt" content="Monogramm CD mit dem Schriftzug Colin Deepe – Software Engineer / Fullstack Developer im Terminal-Design">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/style.scss">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://cooolinho.de/#website",
+                "url": "https://cooolinho.de/",
+                "name": "Colin Deepe",
+                "alternateName": "cooolinho.de",
+                "inLanguage": "de-DE",
+                "publisher": { "@id": "https://cooolinho.de/#person" }
+            },
+            {
+                "@type": "ProfilePage",
+                "@id": "https://cooolinho.de/#profilepage",
+                "url": "https://cooolinho.de/",
+                "name": "Colin Deepe – Software Engineer & Fullstack Developer",
+                "description": "Colin Deepe – Software Engineer & Fullstack Developer mit über 10 Jahren E-Commerce-Praxis. Fokus: Laravel, Filament und KI-gestützte Entwicklung mit Claude Code.",
+                "inLanguage": "de-DE",
+                "isPartOf": { "@id": "https://cooolinho.de/#website" },
+                "mainEntity": { "@id": "https://cooolinho.de/#person" }
+            },
+            {
+                "@type": "Person",
+                "@id": "https://cooolinho.de/#person",
+                "name": "Colin Deepe",
+                "givenName": "Colin",
+                "familyName": "Deepe",
+                "alternateName": "cooolinho",
+                "url": "https://cooolinho.de/",
+                "email": "karriere@cooolinho.de",
+                "image": {
+                    "@type": "ImageObject",
+                    "@id": "https://cooolinho.de/#portrait",
+                    "url": "https://cooolinho.de/foto.png",
+                    "contentUrl": "https://cooolinho.de/foto.png",
+                    "width": 734,
+                    "height": 693,
+                    "caption": "Colin Deepe"
+                },
+                "jobTitle": "Software Engineer / Fullstack Developer",
+                "description": "Software Engineer & Fullstack Developer mit über 10 Jahren Praxis in E-Commerce und Webentwicklung.",
+                "worksFor": {
+                    "@type": "Organization",
+                    "name": "SIMMETH SYSTEM GmbH"
+                },
+                "knowsAbout": ["Laravel", "Filament", "Symfony", "Shopware", "PHP", "E-Commerce", "Webentwicklung", "Claude Code"],
+                "sameAs": ["https://github.com/cooolinho"]
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
-    <div class="scanlines"></div>
+    <div class="scanlines" aria-hidden="true"></div>
 
     <div class="terminal-container">
         <header class="terminal-header">
-            <div class="buttons">
+            <div class="buttons" aria-hidden="true">
                 <span class="btn-close"></span>
                 <span class="btn-minimize"></span>
                 <span class="btn-maximize"></span>
@@ -28,9 +107,9 @@
                 <p class="greeting">
                     <span class="prompt">$</span> <span id="typing-text"></span><span class="cursor">_</span>
                 </p>
-                <p class="hero-output" id="hero-output">
+                <h1 class="hero-output" id="hero-output">
                     <strong>Colin Deepe</strong> – Software Engineer / Fullstack Developer
-                </p>
+                </h1>
             </section>
 
             <section class="about-section">
@@ -44,7 +123,7 @@
             </section>
 
             <section class="focus-section">
-                <p class="command"><span class="prompt">$</span> cat focus.md</p>
+                <h2 class="command"><span class="prompt">$</span> cat focus.md</h2>
                 <div class="output">
                     <div class="focus-grid">
                         <article class="focus-card">
@@ -70,7 +149,7 @@
             </section>
 
             <section class="skills-section">
-                <p class="command"><span class="prompt">$</span> ls -la skills/</p>
+                <h2 class="command"><span class="prompt">$</span> ls -la skills/</h2>
                 <div class="output">
                     <ul class="skills-list">
                         <li><span class="perm">drwxr-xr-x</span> <span class="type">sprachen/</span> Java · PHP · JavaScript · TypeScript · Python · HTML/XML · CSS</li>
@@ -84,7 +163,7 @@
             </section>
 
             <section class="career-section">
-                <p class="command"><span class="prompt">$</span> git log --career</p>
+                <h2 class="command"><span class="prompt">$</span> git log --career</h2>
                 <div class="output">
                     <ol class="timeline">
                         <li class="commit">
@@ -150,7 +229,7 @@
             </section>
 
             <section class="volunteer-section">
-                <p class="command"><span class="prompt">$</span> cat ehrenamt.txt</p>
+                <h2 class="command"><span class="prompt">$</span> cat ehrenamt.txt</h2>
                 <div class="output">
                     <p><span class="keyword">IT-, Media &amp; Content Manager</span> · TSV Großenkneten + Marktausschuss <span class="muted">(seit 01.2018)</span></p>
                     <ul class="commit-body">
@@ -162,7 +241,7 @@
             </section>
 
             <section class="github-section">
-                <p class="command"><span class="prompt">$</span> gh stats cooolinho</p>
+                <h2 class="command"><span class="prompt">$</span> gh stats cooolinho</h2>
                 <div class="output">
                     <div id="github-stats" class="github-stats">
                         <p class="muted">Keine GitHub-Statistiken vorhanden.</p>
@@ -171,10 +250,10 @@
             </section>
 
             <section class="contact-section">
-                <p class="command"><span class="prompt">$</span> cat contact.txt</p>
+                <h2 class="command"><span class="prompt">$</span> cat contact.txt</h2>
                 <div class="output">
                     <p>&gt; E-Mail: <a href="mailto:karriere@cooolinho.de">karriere@cooolinho.de</a></p>
-                    <p>&gt; GitHub: <a href="https://github.com/cooolinho" target="_blank" rel="noopener">github.com/cooolinho</a></p>
+                    <p>&gt; GitHub: <a href="https://github.com/cooolinho" target="_blank" rel="me noopener">github.com/cooolinho</a></p>
                 </div>
             </section>
         </main>

@@ -116,6 +116,10 @@ section {
 .command {
     color: $text-muted;
     margin-bottom: 10px;
+    // Befehlszeilen sind <h2> – Überschriften-Stile zurücksetzen
+    font-size: inherit;
+    font-weight: normal;
+    text-shadow: none;
 }
 
 .output {
@@ -174,6 +178,9 @@ a {
 .hero-output {
     color: #fff;
     margin-top: 5px;
+    // <h1> soll wie normaler Terminal-Text aussehen
+    font-size: inherit;
+    font-weight: normal;
     opacity: 0;
     transition: opacity 0.4s ease;
 
