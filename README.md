@@ -1,4 +1,5 @@
 # cooolinho.de
+<img src="public/og-image.png" alt="Hi, I'm cooolinho — Backend Developer · PHP · Symfony · Laravel" width="75%" />
 
 Personal portfolio website with a terminal-styled interface, built with Vite and SCSS. Canonical URL: https://cooolinho.de/
 
