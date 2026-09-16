@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cooolinho.de - Portfolio</title>
+    <title>Colin Deepe – Software Engineer</title>
+    <meta name="description" content="Colin Deepe – Software Engineer / Fullstack Developer mit Fokus auf E-Commerce, Laravel, Filament und KI-gestützte Entwicklung mit Claude.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -27,40 +28,153 @@
                 <p class="greeting">
                     <span class="prompt">$</span> <span id="typing-text"></span><span class="cursor">_</span>
                 </p>
+                <p class="hero-output" id="hero-output">
+                    <strong>Colin Deepe</strong> – Software Engineer / Fullstack Developer
+                </p>
             </section>
 
             <section class="about-section">
                 <p class="command"><span class="prompt">$</span> cat about.md</p>
                 <div class="output">
-                    <h2>Hallo, ich bin cooolinho!</h2>
-                    <p>Ich bin ein leidenschaftlicher Entwickler mit Fokus auf moderne Web-Technologien.</p>
+                    <h2>Hallo, ich bin Colin!</h2>
+                    <p>Software Engineer &amp; Fullstack Developer mit über 10 Jahren Praxis in E-Commerce und Webentwicklung. Ich entwickle skalierbare Online-Shops und Business-Anwendungen – von der Konzeption über die Umsetzung bis zum Go-live.</p>
                     <br>
-                    <p><span class="keyword">Skills:</span></p>
+                    <p>Zu Hause bin ich in Symfony, <span class="hl">Laravel</span> und Shopware. Aktuell begleite ich als IT-Consultant SaaS-Implementierungen und baue eigene Anwendungen mit <span class="hl">Laravel</span> &amp; <span class="hl">Filament</span> – zunehmend KI-gestützt mit <span class="hl">Claude Code</span>.</p>
+                </div>
+            </section>
+
+            <section class="focus-section">
+                <p class="command"><span class="prompt">$</span> cat focus.md</p>
+                <div class="output">
+                    <div class="focus-grid">
+                        <article class="focus-card">
+                            <span class="badge">[ FOCUS ]</span>
+                            <h3>Laravel</h3>
+                            <p>Mein Framework der Wahl für neue Projekte: Laravel 13 mit Docker, Redis und Queues. Bei der VIEROL AG habe ich den Laravel-basierten Online-Shop weiterentwickelt und betreut.</p>
+                            <p class="focus-meta" data-focus="laravel" hidden></p>
+                        </article>
+                        <article class="focus-card">
+                            <span class="badge">[ FOCUS ]</span>
+                            <h3>Filament</h3>
+                            <p>Admin-Panels und interne Tools in kurzer Zeit: Filament 5 für Ressourcen, Formulare, Tabellen und Dashboards. Basis ist mein Open-Source-Starter <a href="https://github.com/cooolinho/laravel-filament-template" target="_blank" rel="noopener">laravel-filament-template</a>.</p>
+                            <p class="focus-meta" data-focus="filament" hidden></p>
+                        </article>
+                        <article class="focus-card">
+                            <span class="badge">[ FOCUS ]</span>
+                            <h3>Claude &amp; KI</h3>
+                            <p>KI-gestützte Entwicklung im Alltag: Claude Code mit eigenen Skills und Automationen – etwa <code>/update-github-infos</code>, das die Statistiken weiter unten aktualisiert – sowie GitHub Copilot CLI und LLM-Frameworks.</p>
+                            <p class="focus-meta" data-focus="claude" hidden></p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="skills-section">
+                <p class="command"><span class="prompt">$</span> ls -la skills/</p>
+                <div class="output">
                     <ul class="skills-list">
-                        <li><span class="perm">drwxr-xr-x</span> <span class="type">Frontend:</span> HTML, CSS/SCSS, JavaScript, React</li>
-                        <li><span class="perm">drwxr-xr-x</span> <span class="type">Backend:</span> Node.js, Python</li>
-                        <li><span class="perm">drwxr-xr-x</span> <span class="type">DevOps:</span> Docker, Git, CI/CD</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">sprachen/</span> Java · PHP · JavaScript · TypeScript · Python · HTML/XML · CSS</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">frameworks/</span> <span class="hl">Laravel</span> · <span class="hl">Filament</span> · Symfony · Shopware · Vue.js · React · Angular · Node.js · Spring · Ionic · Contao</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">devops/</span> Docker · Kubernetes · Jenkins · Gradle · SonarQube · Grafana · Jira</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">daten-business/</span> SQL · MySQL · MariaDB · PostgreSQL · NoSQL · ERP-/CRM-Systeme · Kanban · Scrum</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">apis/</span> REST-API · Web-API · API-Clients · API-Design · Automation</li>
+                        <li><span class="perm">drwxr-xr-x</span> <span class="type">tools-ki/</span> <span class="hl">Claude Code</span> · GitHub Copilot CLI · LLM-Frameworks · Git · GitLab · IntelliJ · M365 (Admin)</li>
                     </ul>
                 </div>
             </section>
 
-            <section class="projects-section">
-                <p class="command"><span class="prompt">$</span> git log --oneline</p>
+            <section class="career-section">
+                <p class="command"><span class="prompt">$</span> git log --career</p>
                 <div class="output">
-                    <ul class="git-log">
-                        <li><span class="hash">a1b2c3d</span> <span class="msg">feat: Portfolio Website (Vite + SCSS)</span></li>
-                        <li><span class="hash">e4f5g6h</span> <span class="msg">feat: E-Commerce Dashboard</span></li>
-                        <li><span class="hash">i7j8k9l</span> <span class="msg">fix: API Endpoint Optimierung</span></li>
+                    <ol class="timeline">
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">05.2026</span> <span class="ref">(HEAD -&gt; heute)</span> <span class="msg">IT-Consultant / SaaS Implementation</span></p>
+                            <p class="commit-meta">SIMMETH SYSTEM GmbH, Burghausen</p>
+                            <ul class="commit-body">
+                                <li>Technische Begleitung von SaaS-Implementierungen bis zum erfolgreichen Go-live</li>
+                                <li>Konzeption, Konfiguration und Anpassung an kundenspezifische Anforderungen</li>
+                                <li>Technischer Ansprechpartner zwischen Kunden, Produktmanagement und Entwicklung</li>
+                            </ul>
+                        </li>
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">06.2023</span> <span class="ref">(bis 04.2026)</span> <span class="msg">Software Engineering Consultant</span></p>
+                            <p class="commit-meta">Colin Deepe (Web &amp; Applications) · freiberuflich, nebenberuflich</p>
+                            <ul class="commit-body">
+                                <li>Entwicklung und Implementierung individueller Softwarelösungen</li>
+                                <li>Softwaretests und Identifizierung technischer Probleme</li>
+                                <li>Zusammenarbeit mit Projektteams zur Optimierung von Entwicklungsprozessen</li>
+                            </ul>
+                        </li>
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">09.2022</span> <span class="ref">(bis 05.2025)</span> <span class="msg">Software Engineer</span></p>
+                            <p class="commit-meta">VIEROL AG, Oldenburg</p>
+                            <ul class="commit-body">
+                                <li>Weiterentwicklung und Betreuung des <span class="hl">Laravel</span>-basierten Online-Shops (vierol-shop.de)</li>
+                                <li>Code-Reviews zur Sicherstellung der Code-Qualität</li>
+                                <li>Softwaretests und Identifizierung technischer Probleme</li>
+                            </ul>
+                            <p class="stack">Tech-Stack: Laravel · Symfony · Elasticsearch · PHP · SQL · Vue.js · Vite · Jenkins · Jira</p>
+                        </li>
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">08.2018</span> <span class="ref">(bis 04.2022)</span> <span class="msg">Software Engineer</span></p>
+                            <p class="commit-meta">hmmh multimediahaus AG, Bremen</p>
+                            <ul class="commit-body">
+                                <li>Individuelle Entwicklung und Betreuung von Online-Shops auf Basis von Shopware 5/6</li>
+                                <li>Code-Reviews und Softwaretests</li>
+                            </ul>
+                            <p class="stack">Tech-Stack: Shopware 5 &amp; 6 · Symfony · PHP · Vue.js · Twig · Magento · SQL · Vagrant</p>
+                        </li>
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">01.2015</span> <span class="ref">(bis 07.2018)</span> <span class="msg">Webentwickler</span></p>
+                            <p class="commit-meta">ViCoTec Internetsysteme GmbH &amp; Co. KG, Oldenburg</p>
+                            <ul class="commit-body">
+                                <li>Entwicklung interner Systeme, eines Workflow-Management-Systems und mobiler Apps (Ionic)</li>
+                                <li>Softwarelösungen für Frontend und Backend, responsive HTML-Prototypen</li>
+                            </ul>
+                            <p class="stack">Tech-Stack: PHP · Symfony · Contao · Ionic · JavaScript · CSS</p>
+                        </li>
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">01.2012</span> <span class="ref">(bis 01.2015)</span> <span class="msg">Ausbildung zum Fachinformatiker, Anwendungsentwicklung</span></p>
+                            <p class="commit-meta">Bünting E-Commerce GmbH &amp; Co. KG, Oldenburg</p>
+                            <ul class="commit-body">
+                                <li>Entwicklung und Wartung von mytime.de</li>
+                            </ul>
+                            <p class="stack">Tech-Stack: PHP · CSS · JavaScript · SQL</p>
+                        </li>
+                        <li class="commit">
+                            <p class="commit-head"><span class="hash">2008</span> <span class="ref">(initial commit)</span> <span class="msg">Berufsfachschule Informatik &amp; Fachgymnasium Wirtschaft</span></p>
+                            <p class="commit-meta">Wildeshausen · 2008 – 2012</p>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <section class="volunteer-section">
+                <p class="command"><span class="prompt">$</span> cat ehrenamt.txt</p>
+                <div class="output">
+                    <p><span class="keyword">IT-, Media &amp; Content Manager</span> · TSV Großenkneten + Marktausschuss <span class="muted">(seit 01.2018)</span></p>
+                    <ul class="commit-body">
+                        <li>Anforderungen und Konzepte für den Verein ausarbeiten und umsetzen</li>
+                        <li>Einführung und Verwaltung von M365 inkl. Support</li>
+                        <li>Entwicklung und Betreuung des Webauftritts (tsv-grossenkneten.de)</li>
                     </ul>
+                </div>
+            </section>
+
+            <section class="github-section">
+                <p class="command"><span class="prompt">$</span> gh stats cooolinho</p>
+                <div class="output">
+                    <div id="github-stats" class="github-stats">
+                        <p class="muted">Keine GitHub-Statistiken vorhanden.</p>
+                    </div>
                 </div>
             </section>
 
             <section class="contact-section">
                 <p class="command"><span class="prompt">$</span> cat contact.txt</p>
                 <div class="output">
-                    <p>&gt; E-Mail: <a href="mailto:hallo@cooolinho.de">hallo@cooolinho.de</a></p>
-                    <p>&gt; GitHub: <a href="https://github.com/cooolinho" target="_blank">github.com/cooolinho</a></p>
-                    <p>&gt; LinkedIn: <a href="#" target="_blank">linkedin.com/in/cooolinho</a></p>
+                    <p>&gt; E-Mail: <a href="mailto:karriere@cooolinho.de">karriere@cooolinho.de</a></p>
+                    <p>&gt; GitHub: <a href="https://github.com/cooolinho" target="_blank" rel="noopener">github.com/cooolinho</a></p>
                 </div>
             </section>
         </main>

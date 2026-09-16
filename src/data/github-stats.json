@@ -1,0 +1,178 @@
+{
+  "generatedAt": "2026-09-16T09:21:19.280Z",
+  "profile": {
+    "login": "cooolinho",
+    "url": "https://github.com/cooolinho",
+    "memberSince": "2013-08-09"
+  },
+  "contributions": {
+    "total": 877,
+    "commits": 194,
+    "pullRequests": 12,
+    "private": 660,
+    "activeDays": 128,
+    "currentStreak": 7,
+    "longestStreak": 11
+  },
+  "repos": {
+    "total": 103,
+    "public": 43,
+    "sources": 97,
+    "publicSources": 37,
+    "stars": 99
+  },
+  "focus": {
+    "laravel": {
+      "total": 22,
+      "public": 5
+    },
+    "filament": {
+      "total": 14,
+      "public": 4
+    },
+    "claude": {
+      "total": 4,
+      "public": 1
+    }
+  },
+  "languages": [
+    {
+      "name": "PHP",
+      "repos": 18,
+      "percent": 47
+    },
+    {
+      "name": "Shell",
+      "repos": 7,
+      "percent": 18
+    },
+    {
+      "name": "Python",
+      "repos": 7,
+      "percent": 18
+    },
+    {
+      "name": "HTML",
+      "repos": 3,
+      "percent": 8
+    },
+    {
+      "name": "JavaScript",
+      "repos": 1,
+      "percent": 3
+    },
+    {
+      "name": "AutoHotkey",
+      "repos": 1,
+      "percent": 3
+    },
+    {
+      "name": "Andere",
+      "repos": 1,
+      "percent": 3
+    }
+  ],
+  "featured": [
+    {
+      "name": "laravel-filament-template",
+      "url": "https://github.com/cooolinho/laravel-filament-template",
+      "description": "Dockerized Laravel 13 + Filament 5 starter template with MySQL, Redis and Mailpit",
+      "language": "PHP",
+      "stars": 0,
+      "pushedAt": "2026-09-10",
+      "topics": [
+        "docker",
+        "filament",
+        "laravel",
+        "php",
+        "template"
+      ]
+    },
+    {
+      "name": "laravel-filament-foerdertafel",
+      "url": "https://github.com/cooolinho/laravel-filament-foerdertafel",
+      "description": "Verwaltung vermietbarer Werbeflächen auf Fußballfeldern – Standorte, Spielfeld-Raster, Kunden und Vermietungen mit Laravel & Filament.",
+      "language": "PHP",
+      "stars": 0,
+      "pushedAt": "2026-04-08",
+      "topics": []
+    },
+    {
+      "name": "laravel-my-media-library",
+      "url": "https://github.com/cooolinho/laravel-my-media-library",
+      "description": "Laravel-Anwendung mit Filament-5-Admin-Panel zur Verwaltung von Medieninhalten, komplett dockerisiert.",
+      "language": "JavaScript",
+      "stars": 0,
+      "pushedAt": "2026-07-28",
+      "topics": []
+    },
+    {
+      "name": "discord-bot-v2",
+      "url": "https://github.com/cooolinho/discord-bot-v2",
+      "description": "Self-hosted Discord-Bot: Node.js empfängt WebSocket-Events, Laravel-Queues verarbeiten sie, Filament dient als Admin-Panel.",
+      "language": "PHP",
+      "stars": 0,
+      "pushedAt": "2026-06-07",
+      "topics": []
+    }
+  ],
+  "heatmap": {
+    "start": "2025-09-14",
+    "end": "2026-09-16",
+    "weeks": [
+      [0, 0, 0, 0, 0, 1, 1],
+      [1, 2, 2, 1, 2, 1, 1],
+      [1, 1, 0, 0, 1, 1, 1],
+      [1, 2, 0, 0, 0, 0, 0],
+      [0, 1, 2, 1, 1, 0, 0],
+      [0, 0, 1, 2, 2, 1, 1],
+      [0, 0, 0, 0, 1, 2, 0],
+      [0, 0, 0, 0, 0, 0, 1],
+      [2, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 2, 1],
+      [2, 1, 0, 0, 0, 0, 0],
+      [0, 1, 0, 0, 0, 0, 0],
+      [2, 2, 1, 2, 0, 3, 0],
+      [0, 0, 2, 0, 1, 0, 0],
+      [0, 1, 1, 1, 1, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 0, 2],
+      [0, 0, 2, 2, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [1, 0, 1, 0, 0, 0, 0],
+      [0, 1, 1, 0, 0, 0, 0],
+      [0, 1, 1, 0, 0, 0, 0],
+      [0, 1, 3, 1, 1, 0, 0],
+      [0, 0, 0, 0, 1, 2, 1],
+      [1, 0, 1, 0, 0, 1, 1],
+      [1, 0, 2, 2, 0, 1, 1],
+      [1, 1, 0, 0, 0, 2, 1],
+      [1, 2, 0, 0, 1, 0, 0],
+      [0, 0, 0, 1, 1, 1, 0],
+      [0, 1, 1, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [1, 0, 2, 2, 2, 2, 1],
+      [0, 1, 1, 1, 0, 0, 0],
+      [1, 1, 1, 1, 2, 0, 2],
+      [3, 1, 1, 1, 2, 1, 0],
+      [0, 0, 1, 0, 0, 1, 1],
+      [1, 2, 2, 1, 0, 0, 3],
+      [4, 1, 2, 0, 1, 4, 4],
+      [3, 1, 4, 4]
+    ]
+  }
+}

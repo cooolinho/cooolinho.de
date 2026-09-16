@@ -1,0 +1,35 @@
+{
+  "login": "cooolinho",
+  "output": "src/data/github-stats.json",
+  "languages": {
+    "activeYears": 3,
+    "top": 6,
+    "exclude": ["Dockerfile"]
+  },
+  "focus": {
+    "composerPaths": ["composer.json", "laravel/composer.json", "src/composer.json"],
+    "packages": {
+      "laravel": "laravel/framework",
+      "filament": "filament/filament"
+    },
+    "claudePaths": ["CLAUDE.md", ".claude", "laravel/CLAUDE.md"]
+  },
+  "featured": [
+    {
+      "repo": "laravel-filament-template",
+      "description": "Dockerisiertes Starter-Template mit Laravel 13, Filament 5, MySQL, Redis und Mailpit."
+    },
+    {
+      "repo": "laravel-filament-foerdertafel",
+      "description": "Verwaltung vermietbarer Werbeflächen auf Fußballfeldern – Standorte, Spielfeld-Raster, Kunden und Vermietungen mit Laravel & Filament."
+    },
+    {
+      "repo": "laravel-my-media-library",
+      "description": "Laravel-Anwendung mit Filament-5-Admin-Panel zur Verwaltung von Medieninhalten, komplett dockerisiert."
+    },
+    {
+      "repo": "discord-bot-v2",
+      "description": "Self-hosted Discord-Bot: Node.js empfängt WebSocket-Events, Laravel-Queues verarbeiten sie, Filament dient als Admin-Panel."
+    }
+  ]
+}
