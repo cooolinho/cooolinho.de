@@ -235,7 +235,11 @@ function collectStrings(value) {
 
 const leak = privatePattern && collectStrings(stats).find((text) => privatePattern.test(text));
 if (leak) {
-    fail(`Datenschutz-Guard: Ausgabe enthält den Namen eines privaten Repos ("${leak.match(privatePattern)[0]}") – nichts geschrieben.`);
+    // In CI laufen die Logs öffentlich (siehe .github/workflows) – den privaten Repo-Namen dort nicht ausgeben.
+    const hint = process.env.CI
+        ? 'Name unterdrückt, da CI=1 (öffentliches Log) – lokal mit --dry-run prüfen.'
+        : `"${leak.match(privatePattern)[0]}"`;
+    fail(`Datenschutz-Guard: Ausgabe enthält den Namen eines privaten Repos (${hint}) – nichts geschrieben.`);
 }
 
 // --- 5. Vergleich + Ausgabe -----------------------------------------------

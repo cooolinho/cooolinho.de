@@ -1,0 +1,114 @@
+name: Deploy
+
+# Reusable workflow that does the actual build + SFTP deploy. Called by
+# release.yml (on a version tag) and daily.yml (on a schedule / manual run).
+# Keeping the logic in one place means both triggers deploy identically.
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "Git ref to check out and deploy (a version tag)"
+        required: true
+        type: string
+      trigger:
+        description: "Who triggered this deploy: release | schedule | manual"
+        required: true
+        type: string
+      dry_run:
+        description: "If true, run the SFTP upload with --dry-run (no files transferred)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  # Never let a release and the daily job upload at the same time.
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build & deploy (${{ inputs.trigger }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: ${{ vars.SITE_URL || 'https://cooolinho.de' }}
+    steps:
+      - name: Checkout ${{ inputs.ref }}
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          # Full history: vite.config.js reads `git log` per file for the
+          # sitemap's <lastmod>. A shallow clone would date every page the
+          # same (the date of this single fetched commit).
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Refresh GitHub stats
+        env:
+          GH_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+        run: npm run stats | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Build
+        run: npm run build
+
+      - name: Write version.json
+        run: |
+          jq -n \
+            --arg version "${{ inputs.ref }}" \
+            --arg commit "${{ github.sha }}" \
+            --arg trigger "${{ inputs.trigger }}" \
+            --arg deployedAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg statsGeneratedAt "$(jq -r .generatedAt src/data/github-stats.json)" \
+            '{version: $version, commit: $commit, trigger: $trigger, deployedAt: $deployedAt, statsGeneratedAt: $statsGeneratedAt}' \
+            > dist/version.json
+          cat dist/version.json
+
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy via SFTP
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_PORT: ${{ vars.SFTP_PORT }}
+          SFTP_REMOTE_PATH: ${{ vars.SFTP_REMOTE_PATH }}
+          SFTP_PRIVATE_KEY: ${{ secrets.SFTP_PRIVATE_KEY }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_KNOWN_HOSTS: ${{ secrets.SFTP_KNOWN_HOSTS }}
+          SFTP_EXCLUDE: ${{ vars.SFTP_EXCLUDE }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+        run: bash scripts/deploy.sh
+
+      - name: Smoke test
+        if: ${{ !inputs.dry_run }}
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://cooolinho.de' }}
+        run: |
+          for i in 1 2 3 4 5; do
+            body="$(curl -fsS "$SITE_URL/version.json?run=${{ github.run_id }}")" && break
+            echo "Attempt $i failed, retrying in 10s..."
+            sleep 10
+          done
+          echo "$body" | jq .
+          live_version="$(echo "$body" | jq -r .version)"
+          live_commit="$(echo "$body" | jq -r .commit)"
+          if [ "$live_version" != "${{ inputs.ref }}" ] || [ "$live_commit" != "${{ github.sha }}" ]; then
+            echo "::error::Live version.json does not match this deploy (expected ${{ inputs.ref }} / ${{ github.sha }}, got $live_version / $live_commit)"
+            exit 1
+          fi
+          echo "✔ Live site is now serving ${{ inputs.ref }} (${{ github.sha }})"

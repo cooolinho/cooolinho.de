@@ -1,0 +1,77 @@
+name: Release
+
+# Fires when a version tag (YYYY.M.D.x, e.g. 2026.9.16.1) is pushed.
+# Validates the tag, deploys it, then publishes a GitHub Release.
+
+on:
+  push:
+    tags:
+      - "[0-9][0-9][0-9][0-9].*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check tag format and date
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          echo "Tag: $tag"
+
+          if ! [[ "$tag" =~ ^([0-9]{4})\.([1-9]|1[0-2])\.([1-9]|[12][0-9]|3[01])\.([1-9][0-9]*)$ ]]; then
+            echo "::error::Tag '$tag' does not match the required format YYYY.M.D.x (no leading zeros), e.g. 2026.9.16.1"
+            exit 1
+          fi
+
+          year="${BASH_REMATCH[1]}"
+          month="${BASH_REMATCH[2]}"
+          day="${BASH_REMATCH[3]}"
+
+          if ! date -d "${year}-${month}-${day}" >/dev/null 2>&1; then
+            echo "::error::Tag '$tag' contains an invalid calendar date (${year}-${month}-${day})"
+            exit 1
+          fi
+
+      - name: Check tag is on master
+        run: |
+          git fetch origin master --quiet
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/master; then
+            echo "::error::Tag ${GITHUB_REF_NAME} (commit ${GITHUB_SHA}) is not part of origin/master. Tags must point at a commit on master."
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy
+    needs: validate
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ github.ref_name }}
+      trigger: release
+    secrets: inherit
+
+  github-release:
+    name: Publish GitHub Release
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --verify-tag \
+            --generate-notes \
+            --title "${GITHUB_REF_NAME}"

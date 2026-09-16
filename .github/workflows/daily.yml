@@ -1,0 +1,81 @@
+name: Daily deploy
+
+# Redeploys the latest release tag once a day, after refreshing the GitHub
+# stats. This is what keeps the "gh stats cooolinho" section current even
+# on days with no code changes / no new release.
+#
+# Can also be run manually to redeploy an older tag (rollback) or to deploy
+# right now instead of waiting for the schedule.
+
+on:
+  schedule:
+    # 03:17 UTC. An off-the-hour minute avoids the load spike GitHub sees
+    # right at :00 for cron schedules, which can delay the run.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (defaults to the latest version tag)"
+        required: false
+        type: string
+      dry_run:
+        description: "Run the SFTP upload with --dry-run (no files transferred)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    name: Resolve tag to deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Resolve tag
+        id: resolve
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          pattern='^[0-9]{4}\.([1-9]|1[0-2])\.([1-9]|[12][0-9]|3[01])\.[1-9][0-9]*$'
+
+          if [ -n "$INPUT_TAG" ]; then
+            if ! [[ "$INPUT_TAG" =~ $pattern ]]; then
+              echo "::error::'$INPUT_TAG' does not match the version tag format YYYY.M.D.x"
+              exit 1
+            fi
+            if ! git rev-parse -q --verify "refs/tags/$INPUT_TAG" >/dev/null; then
+              echo "::error::Tag '$INPUT_TAG' does not exist"
+              exit 1
+            fi
+            tag="$INPUT_TAG"
+          else
+            tag="$(git tag -l --sort=-v:refname | grep -E "$pattern" | head -n1 || true)"
+          fi
+
+          if [ -z "$tag" ]; then
+            echo "::notice::No version tag found yet, nothing to deploy."
+            echo "tag=" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Resolved tag: $tag"
+            echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    name: Deploy
+    needs: resolve
+    if: needs.resolve.outputs.tag != ''
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ needs.resolve.outputs.tag }}
+      trigger: ${{ github.event_name == 'workflow_dispatch' && 'manual' || 'schedule' }}
+      dry_run: ${{ inputs.dry_run == true }}
+    secrets: inherit
