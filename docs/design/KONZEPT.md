@@ -1,6 +1,6 @@
 # Redesign cooolinho.de – Designkonzept
 
-Stand: 16.11.2026 · Status: **drei Entwürfe zur Auswahl**, noch nichts an der Live-Seite geändert.
+Stand: 16.11.2026 · Status: **Entwurf C – „Bento“ ausgewählt und umgesetzt** (`index.html`, `src/style.scss`, `src/main.js`).
 
 - [1. Ausgangslage](#1-ausgangslage)
 - [2. Anforderungen](#2-anforderungen)

@@ -9,7 +9,7 @@ allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/fetch-github-stats.mjs) Bas
 
 # GitHub-Infos aktualisieren
 
-Aktualisiert `src/data/github-stats.json`. Daraus rendert die Website den Abschnitt `gh stats cooolinho` und die Zähler in den Fokus-Karten. Die gesamte Datenlogik steckt im Script – Abfragen **nicht** selbst per `gh api` nachbauen.
+Aktualisiert `src/data/github-stats.json`. Daraus rendert die Website die GitHub-Kachel (Zahlen, Heatmap, Sprachen), die Contributions-Kachel, die Zähler in den Fokus-Kacheln und das Aktualisierungsdatum der Projekt-Kacheln. Die gesamte Datenlogik steckt im Script – Abfragen **nicht** selbst per `gh api` nachbauen.
 
 ## Ablauf
 
