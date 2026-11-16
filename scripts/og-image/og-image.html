@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>OG-Bild cooolinho.de</title>
+<!-- Vorlage für public/og-image.png (1200 × 630). Erzeugen: node scripts/og-image/render.mjs -->
+<style>
+@font-face {
+    font-family: 'Bricolage Grotesque';
+    font-weight: 400 800;
+    src: url('../../src/fonts/bricolage-grotesque-latin.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-weight: 400 700;
+    src: url('../../src/fonts/jetbrains-mono-latin.woff2') format('woff2');
+}
+:root {
+    --bg: #0c0a11; --tile: #181521; --line: #2a2636; --ink: #f2eff9; --muted: #a39db3;
+    --violet: #6f4cf6; --lime: #c8f53a; --coral: #ff7a5e; --dark: #050408;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1200px; height: 630px; overflow: hidden; }
+body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 360px;
+    grid-template-rows: 1fr 182px;
+    gap: 16px;
+}
+.tile { border-radius: 30px; padding: 32px; position: relative; overflow: hidden; }
+.label { font-weight: 700; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+
+.hero { grid-column: 1 / 4; background: var(--tile); border: 1px solid var(--line); padding: 40px 44px; display: flex; flex-direction: column; }
+h1 { font-weight: 800; font-size: 92px; line-height: .95; letter-spacing: -0.05em; margin-top: 30px; }
+.swap { font-weight: 800; font-size: 54px; line-height: 1.05; letter-spacing: -0.04em; color: var(--lime); margin-top: 14px; }
+.url { margin-top: auto; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 24px; }
+.url::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 7px rgba(200, 245, 58, .2); }
+
+.me { grid-column: 4; grid-row: 1; background: var(--violet); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.orbit { position: relative; width: 170px; height: 170px; display: grid; place-items: center; margin: 10px 0 46px; }
+.orbit::before, .orbit::after { content: ''; position: absolute; inset: 0; border: 2px dashed rgba(255, 255, 255, .4); border-radius: 50%; }
+.orbit::after { inset: -24px; border-style: dotted; opacity: .6; }
+.orbit img { width: 122px; height: 122px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; }
+.orbit b { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(var(--a)) translateY(-109px) rotate(calc(-1 * var(--a))); }
+.orbit b span { display: inline-block; font-size: 15px; font-weight: 700; background: var(--lime); color: #16131d; padding: 4px 12px; border-radius: 99px; white-space: nowrap; }
+.handle { font-weight: 700; font-size: 26px; letter-spacing: -0.02em; }
+
+.num { grid-column: 1 / 3; background: var(--lime); color: #16131d; display: flex; align-items: center; gap: 22px; padding: 28px 32px; }
+.num b { font-weight: 800; font-size: 96px; line-height: .9; letter-spacing: -0.05em; }
+.num p { font-weight: 700; font-size: 26px; line-height: 1.15; }
+
+.term { grid-column: 3 / 5; background: var(--dark); color: #e9e6f2; font-family: 'JetBrains Mono', monospace; font-size: 20px; line-height: 1.7; padding: 24px 30px; }
+.dots { display: flex; gap: 8px; margin-bottom: 12px; }
+.dots i { width: 13px; height: 13px; border-radius: 50%; background: var(--coral); }
+.dots i:nth-child(2) { background: #ffd34d; } .dots i:nth-child(3) { background: var(--lime); }
+.p { color: var(--lime); }
+.o { color: #b0a9c4; }
+.caret { display: inline-block; width: .6em; height: 1.1em; background: var(--lime); vertical-align: text-bottom; }
+</style>
+</head>
+<body>
+    <section class="tile hero">
+        <p class="label">Software Engineer / Fullstack Developer</p>
+        <h1>Hi, ich bin Colin.</h1>
+        <p class="swap">Ich baue Online-Shops.</p>
+        <p class="url">cooolinho.de</p>
+    </section>
+    <section class="tile me">
+        <div class="orbit">
+            <img src="../../public/foto.png" alt="">
+            <b style="--a:-62deg"><span>Laravel</span></b>
+            <b style="--a:62deg"><span>Filament</span></b>
+            <b style="--a:180deg"><span>Claude Code</span></b>
+        </div>
+        <p class="handle">Colin Deepe</p>
+    </section>
+    <section class="tile num">
+        <b>10+</b>
+        <p>Jahre<br>E-Commerce &amp; Web</p>
+    </section>
+    <section class="tile term">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <p><span class="p">❯</span> whoami</p>
+        <p class="o">colin deepe · software engineer</p>
+        <p><span class="p">❯</span> <span class="caret"></span></p>
+    </section>
+</body>
+</html>

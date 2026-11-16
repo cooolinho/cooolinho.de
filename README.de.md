@@ -73,6 +73,8 @@ Der Hoster muss `http://` sowie `www.cooolinho.de` mit **301** auf `https://cooo
 
 Alles befindet sich im `<head>` von `index.html`: `title`, `description`, `robots`, kanonische URL, Favicons, Open-Graph- / X-Card-Tags sowie ein JSON-LD-`@graph` mit `WebSite`, `ProfilePage` und `Person`. Bei Inhaltsänderungen müssen diese Angaben mit der sichtbaren Seite synchron bleiben. Wird ein Bild ausgetauscht, entweder die Abmessungen beibehalten oder `og:image:width`/`og:image:height` sowie `Person.image` anpassen.
 
+`og-image.png`, `favicon.ico` und `apple-touch-icon.png` werden aus `scripts/og-image/og-image.html` und `public/favicon.svg` gerendert. Nach Designänderungen mit `npx -y -p playwright@1 node scripts/og-image/render.mjs` neu erzeugen und die Bilder committen. Die Schriften liegen lokal in `src/fonts/` – es gehen keine Anfragen an Google Fonts.
+
 ### robots.txt
 
 `public/robots.txt` ist eine statische Datei, die unverändert nach `dist/robots.txt` kopiert wird:
@@ -136,6 +138,7 @@ cooolinho.de/
 │   ├── release.yml             # Läuft bei gepushtem Versions-Tag
 │   └── daily.yml               # Tägliches Redeploy des aktuellsten Tags (Cron + manuell)
 ├── scripts/
+│   ├── og-image/                # Vorlage + Skript für og-image.png und die Icons
 │   ├── deploy.sh                # SFTP-Upload (von CI und `npm run deploy` genutzt)
 │   └── release.sh               # Taggt & pusht die nächste Version (`npm run release`)
 ├── docs/
@@ -148,6 +151,8 @@ cooolinho.de/
 ├── src/
 │   ├── main.js                  # Animationen, Farbumschalter, Reiter, GitHub-Stats-Rendering
 │   ├── style.scss               # Styles (SCSS, Bento-Theme, Hell/Dunkel)
+│   ├── _fonts.scss              # @font-face-Regeln der lokalen Schriften
+│   ├── fonts/                   # Bricolage Grotesque + JetBrains Mono (woff2, OFL)
 │   └── data/github-stats.json   # Generiert von /update-github-infos oder `npm run stats`
 └── .claude/skills/update-github-infos/
     ├── SKILL.md                 # Claude-Code-Skill

@@ -189,8 +189,8 @@ Kombinationen sind möglich, zum Beispiel C mit der Befehlszeile aus A als verst
 
 1. Entwurf auswählen, Änderungswünsche sammeln (Farben, Texte, Reihenfolge der Bereiche).
 2. Umsetzung in `index.html`, `src/style.scss` und `src/main.js`. Dabei bleiben erhalten: SEO-Angaben und strukturierte Daten, das automatische Einlesen von `src/data/github-stats.json`, Build und Deployment.
-3. `theme-color`, `color-scheme` und das OG-Bild an das neue Design anpassen (heute fest auf dunkel bzw. Terminal-Optik).
-4. Schriften lokal einbinden statt über Google Fonts laden (Datenschutz, Ladezeit).
+3. ~~`theme-color`, `color-scheme` und das OG-Bild an das neue Design anpassen.~~ Erledigt – OG-Bild, Favicon und Apple-Touch-Icon im Bento-Stil, Vorlage in `scripts/og-image/`.
+4. ~~Schriften lokal einbinden statt über Google Fonts laden.~~ Erledigt – `src/fonts/` und `src/_fonts.scss`.
 
 **Hinweise zu den Mockups**
 
