@@ -39,7 +39,7 @@ Niemals selbst committen oder pushen.
 
 Alles Konfigurierbare steht in [config.json](config.json):
 
-- `featured` – Reihenfolge und Auswahl der Projekte, `description` ist Fallback, wenn das Repo auf GitHub keine Beschreibung hat
+- `featured` – öffentliche Repos, deren Projekt-Kachel (`data-repo` in `index.html`) die Zeile „Sprache · Sterne · aktualisiert am …“ bekommt. Fügt keine Kacheln hinzu; Reihenfolge und `description` wirken nicht auf die Seite (siehe README → „Projekte verwalten“).
 - `languages` – Zeitraum aktiver Repos (`activeYears`), Anzahl (`top`), Ausschlüsse (`exclude`)
 - `focus` – Pfade zu `composer.json`/`CLAUDE.md` und Pakete für die Laravel-/Filament-/Claude-Erkennung
 

@@ -31,7 +31,7 @@ Der Quellcode für [cooolinho.de](https://cooolinho.de/), ein One-Page-Portfolio
 ## ✨ Funktionen
 
 - **Bento-Layout** — animierte Kacheln, Hell/Dunkel-Umschalter, Skill-Reiter und aufklappbarer Werdegang in Vanilla JS (`src/main.js`); die Inhalte bleiben auch ohne JS lesbar
-- **Live-GitHub-Statistiken** — Contributions, Streaks, Contribution-Heatmap, Sprachverteilung und Featured Repos, gerendert aus `src/data/github-stats.json`
+- **Live-GitHub-Statistiken** — Contributions, Repos, aktive Tage, Contribution-Heatmap, Sprachverteilung und das Datum der letzten Aktualisierung auf den Projekt-Kacheln, gerendert aus `src/data/github-stats.json`
 - **Selbstgenerierende Sitemap** — ein eigenes Vite-Plugin scannt `dist` nach dem Build, überspringt `noindex`-Seiten und versieht jede URL mit dem Datum ihres letzten Commits
 - **Tag-getriggertes Deployment** — ein gepushter Versions-Tag baut die Seite und lädt sie per SFTP hoch; ein täglicher Cron-Job deployt das aktuellste Tag erneut, nachdem die GitHub-Statistiken aktualisiert wurden
 
@@ -117,7 +117,7 @@ Eine Domain-Property für `cooolinho.de` anlegen (Verifizierung per DNS-TXT-Eint
 
 ## 📊 GitHub-Statistiken
 
-Der Abschnitt `gh stats cooolinho` und die Projektzähler werden aus `src/data/github-stats.json` gerendert. Fehlt die Datei, zeigt die Seite einen Platzhalter. Sie wird **nicht** als verbindliche Datenquelle committet — die eingecheckte Kopie ist nur ein Fallback für die lokale Entwicklung — und vor jedem Deploy automatisch aktualisiert.
+Die GitHub-Kachel (Repos, Commits, aktive Tage, Heatmap, Sprachen), die Contributions-Kachel, die Zähler in den Fokus-Kacheln und die Datumszeile der Projekt-Kacheln werden aus `src/data/github-stats.json` gerendert. Fehlt die Datei, zeigt die Seite einen Platzhalter. Sie wird **nicht** als verbindliche Datenquelle committet — die eingecheckte Kopie ist nur ein Fallback für die lokale Entwicklung — und vor jedem Deploy automatisch aktualisiert.
 
 Lokal aktualisieren über den Claude-Code-Skill (erfordert `gh auth login` als `cooolinho`):
 
@@ -125,7 +125,62 @@ Lokal aktualisieren über den Claude-Code-Skill (erfordert `gh auth login` als `
 /update-github-infos
 ```
 
-oder direkt über das Skript: `npm run stats` (mit `-- --dry-run` zur Vorschau ohne Schreiben). Featured Repos, Spracheinstellungen und Fokus-Erkennung werden in `.claude/skills/update-github-infos/config.json` konfiguriert.
+oder direkt über das Skript: `npm run stats` (mit `-- --dry-run` zur Vorschau ohne Schreiben). Featured Repos, Spracheinstellungen und Fokus-Erkennung werden in `.claude/skills/update-github-infos/config.json` konfiguriert – was `featured` auf der Seite bewirkt, steht im Abschnitt „Projekte verwalten“ weiter unten.
+
+## 🗂️ Projekte verwalten
+
+Es gibt **keine zentrale Projektliste**. Die Kacheln im Bereich „Projekte“ werden an zwei Stellen gepflegt:
+
+| Was | Wo | Wirkung |
+|---|---|---|
+| Kachel-Inhalt: Titel, Text, Label, Tags, Link, Farbe, Reihenfolge | `index.html`, Block `<!-- Projekte -->` | Genau diese Kacheln erscheinen auf der Seite, in dieser Reihenfolge. |
+| Zeile „Sprache · ★ Sterne · aktualisiert am …“ | `featured` in `.claude/skills/update-github-infos/config.json` **und** `data-repo` an der Kachel | Nur Kacheln, deren `data-repo` einem Eintrag in `featured` entspricht, bekommen die Zeile. |
+| Aktualität dieser Zeile | automatisch vor jedem Deployment (`npm run stats` in `deploy.yml`, auch beim täglichen Redeploy) | Lokal per `npm run stats` oder `/update-github-infos`. |
+
+Die `featured`-Liste fügt also **keine** Kacheln hinzu. Ein Repo, das nur in `featured` steht, erscheint nicht auf der Seite. Ihre Reihenfolge und das Feld `description` haben keinen Einfluss auf die Seite – der Text kommt immer aus `index.html`.
+
+### Projekt hinzufügen
+
+1. In `index.html` eine Kachel im Block `<!-- Projekte -->` an der gewünschten Stelle einfügen:
+
+   ```html
+   <a class="tile proj pop" style="--d:1;--c:var(--sky)" href="https://github.com/cooolinho/mein-repo" target="_blank" rel="noopener" data-repo="mein-repo">
+       <span class="icon" aria-hidden="true">M</span><span class="arrow" aria-hidden="true">→</span>
+       <span class="label">Open Source</span>
+       <h3>mein-repo</h3>
+       <p>Ein bis zwei Sätze, worum es geht.</p>
+       <span class="tags"><span>Laravel</span><span>Filament</span></span>
+   </a>
+   ```
+
+   | Stelle | Bedeutung |
+   |---|---|
+   | `href` | Ziel des Klicks: GitHub-Repo oder Website |
+   | `--c` | Farbe des Icons: `var(--lime)`, `var(--coral)`, `var(--lilac)`, `var(--sun)` oder `var(--sky)` |
+   | `--d` | Einblend-Verzögerung: `0`, `1`, `2` für die erste, zweite, dritte Kachel einer Reihe (fehlt `--d`, gilt `0`) |
+   | `icon` | Ein Buchstabe im farbigen Quadrat |
+   | `label` | Kleine Zeile über dem Titel, z. B. „Open Source“, „Beruflich · Firma“, „Ehrenamt · Verein“ |
+   | `tags` | Beliebig viele `<span>`-Schlagworte |
+   | `data-repo` | Nur bei eigenen **öffentlichen** GitHub-Repos: exakter Repo-Name. Weglassen bei Websites/Kundenprojekten. |
+
+2. Nur bei GitHub-Repos mit `data-repo`: in `.claude/skills/update-github-infos/config.json` unter `featured` einen Eintrag ergänzen:
+
+   ```json
+   { "repo": "mein-repo", "description": "Kurzbeschreibung (nur Fallback für die Stats-Datei)" }
+   ```
+
+3. Lokal `npm run stats` ausführen (oder bis zum nächsten Deployment warten) und mit `npm run dev` prüfen.
+
+### Projekt entfernen oder umsortieren
+
+- **Entfernen:** Kachel aus `index.html` löschen und den passenden Eintrag aus `featured` entfernen (sonst holt das Skript die Daten unnötig).
+- **Umsortieren:** Kacheln in `index.html` verschieben. Danach `--d` je Dreierreihe neu vergeben (0, 1, 2).
+
+### Stolperfallen
+
+- `data-repo` muss genau dem Repo-Namen auf GitHub entsprechen. Groß-/Kleinschreibung ist im Skript egal, für die Zuordnung auf der Seite aber nicht – am besten exakt übernehmen.
+- Private, umbenannte oder gelöschte Repos überspringt das Skript mit einer `⚠`-Warnung. Die Kachel bleibt dann ohne Datumszeile.
+- Auf dem Desktop stehen drei Kacheln pro Reihe; mit einer durch 3 teilbaren Anzahl bleibt das Raster ohne Lücke.
 
 ## 📁 Projektstruktur
 

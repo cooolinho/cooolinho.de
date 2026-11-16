@@ -31,7 +31,7 @@ The source for [cooolinho.de](https://cooolinho.de/), a one-page portfolio laid 
 ## ✨ Features
 
 - **Bento layout** — animated tiles, light/dark mode toggle, skill tabs and an expandable career timeline in vanilla JS (`src/main.js`); content stays readable without JS
-- **Live GitHub stats** — contributions, streaks, a contribution heatmap, language breakdown and featured repos, rendered from `src/data/github-stats.json`
+- **Live GitHub stats** — contributions, repos, active days, a contribution heatmap, language breakdown and the last-updated date on project tiles, rendered from `src/data/github-stats.json`
 - **Self-generating sitemap** — a custom Vite plugin scans `dist` after build, skips `noindex` pages, and stamps each URL with its last commit date
 - **Tag-triggered deployment** — pushing a version tag builds the site and uploads it via SFTP; a daily cron job redeploys the latest tag after refreshing GitHub stats
 
@@ -117,7 +117,7 @@ Add a domain property for `cooolinho.de` (DNS TXT verification), submit `https:/
 
 ## 📊 GitHub Stats
 
-The `gh stats cooolinho` section and the project counters are rendered from `src/data/github-stats.json`. If the file is missing, the page shows a placeholder. It's **not** committed as authoritative data — the checked-in copy is only a fallback for local dev — and is refreshed automatically before every deploy.
+The GitHub tile (repos, commits, active days, heatmap, languages), the contributions tile, the focus counters and the date line on the project tiles are rendered from `src/data/github-stats.json`. If the file is missing, the page shows a placeholder. It's **not** committed as authoritative data — the checked-in copy is only a fallback for local dev — and is refreshed automatically before every deploy.
 
 To update it locally, use the Claude Code skill (requires `gh auth login` as `cooolinho`):
 
@@ -125,7 +125,62 @@ To update it locally, use the Claude Code skill (requires `gh auth login` as `co
 /update-github-infos
 ```
 
-or run the script directly: `npm run stats` (add `-- --dry-run` to preview without writing). Featured repos, language settings and focus detection are configured in `.claude/skills/update-github-infos/config.json`.
+or run the script directly: `npm run stats` (add `-- --dry-run` to preview without writing). Featured repos, language settings and focus detection are configured in `.claude/skills/update-github-infos/config.json` — see “Managing projects” below for what `featured` does on the page.
+
+## 🗂️ Managing projects
+
+There is **no central project list**. The tiles in the "Projekte" section are maintained in two places:
+
+| What | Where | Effect |
+|---|---|---|
+| Tile content: title, text, label, tags, link, colour, order | `index.html`, block `<!-- Projekte -->` | Exactly these tiles appear on the page, in this order. |
+| Line "language · ★ stars · aktualisiert …" | `featured` in `.claude/skills/update-github-infos/config.json` **and** `data-repo` on the tile | Only tiles whose `data-repo` matches an entry in `featured` get the line. |
+| Freshness of that line | automatic before every deploy (`npm run stats` in `deploy.yml`, including the daily redeploy) | Locally via `npm run stats` or `/update-github-infos`. |
+
+So `featured` does **not** add tiles. A repo listed only in `featured` won't show up on the page. Its order and the `description` field have no effect on the page — the text always comes from `index.html`.
+
+### Adding a project
+
+1. Insert a tile in `index.html` inside the `<!-- Projekte -->` block, at the position you want:
+
+   ```html
+   <a class="tile proj pop" style="--d:1;--c:var(--sky)" href="https://github.com/cooolinho/my-repo" target="_blank" rel="noopener" data-repo="my-repo">
+       <span class="icon" aria-hidden="true">M</span><span class="arrow" aria-hidden="true">→</span>
+       <span class="label">Open Source</span>
+       <h3>my-repo</h3>
+       <p>One or two sentences about it.</p>
+       <span class="tags"><span>Laravel</span><span>Filament</span></span>
+   </a>
+   ```
+
+   | Part | Meaning |
+   |---|---|
+   | `href` | Click target: GitHub repo or website |
+   | `--c` | Icon colour: `var(--lime)`, `var(--coral)`, `var(--lilac)`, `var(--sun)` or `var(--sky)` |
+   | `--d` | Reveal delay: `0`, `1`, `2` for the first, second, third tile in a row (defaults to `0`) |
+   | `icon` | One letter in the coloured square |
+   | `label` | Small line above the title, e.g. "Open Source", "Beruflich · Company", "Ehrenamt · Club" |
+   | `tags` | Any number of `<span>` keywords |
+   | `data-repo` | Only for your own **public** GitHub repos: the exact repo name. Leave it out for websites/client projects. |
+
+2. Only for GitHub repos with `data-repo`: add an entry under `featured` in `.claude/skills/update-github-infos/config.json`:
+
+   ```json
+   { "repo": "my-repo", "description": "Short description (only a fallback for the stats file)" }
+   ```
+
+3. Run `npm run stats` locally (or wait for the next deploy) and check with `npm run dev`.
+
+### Removing or reordering
+
+- **Remove:** delete the tile from `index.html` and the matching entry from `featured` (otherwise the script fetches data nobody uses).
+- **Reorder:** move tiles in `index.html`, then reassign `--d` per row of three (0, 1, 2).
+
+### Pitfalls
+
+- `data-repo` must match the GitHub repo name exactly. The script ignores case, the page lookup doesn't — copy it verbatim.
+- Private, renamed or deleted repos are skipped by the script with a `⚠` warning; the tile then has no date line.
+- Desktop shows three tiles per row; a count divisible by 3 keeps the grid without gaps.
 
 ## 📁 Project Structure
 
