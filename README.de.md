@@ -1,7 +1,7 @@
 <h1 align="center">🌐 cooolinho.de</h1>
 
 <p align="center">
-  <em>Persönliche Portfolio-Seite von Colin Deepe (cooolinho) — eine Terminal-gestylte Single Page mit Live-GitHub-Statistiken, gebaut mit Vite und SCSS</em>
+  <em>Persönliche Portfolio-Seite von Colin Deepe (cooolinho) — eine Single Page im Bento-Raster mit Hell/Dunkel-Modus und Live-GitHub-Statistiken, gebaut mit Vite und SCSS</em>
 </p>
 
 <p align="center">
@@ -18,19 +18,19 @@
 
 ## 📖 Über das Projekt
 
-Der Quellcode für [cooolinho.de](https://cooolinho.de/), ein One-Page-Portfolio im Terminal-Look. Es zeigt eine getippte `whoami`-Intro sowie live abgerufene GitHub-Aktivität (Contributions, Streaks, Heatmap, Sprachen, Featured Repos), die über einen Claude-Code-Skill geladen wird. Der Build kümmert sich selbst um SEO: strukturierte Daten, eine generierte Sitemap und automatisiertes Deployment bei jedem getaggten Release.
+Der Quellcode für [cooolinho.de](https://cooolinho.de/), ein One-Page-Portfolio als animiertes Bento-Raster mit Hell- und Dunkelmodus. Es zeigt Intro, Fokus, Projekte, Skills und Werdegang sowie live abgerufene GitHub-Aktivität (Contributions, Heatmap, Sprachen, zuletzt aktualisierte Repos), die über einen Claude-Code-Skill geladen wird. Der Build kümmert sich selbst um SEO: strukturierte Daten, eine generierte Sitemap und automatisiertes Deployment bei jedem getaggten Release.
 
 ## 🛠️ Tech-Stack
 
 | Technologie | Version | Zweck |
 |------------|---------|---------|
 | ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) Vite | 8.x | Frontend-Build-Tool und Dev-Server |
-| ![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=sass&logoColor=white) Sass | 1.x | SCSS-Präprozessor für das Terminal-Theme |
+| ![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=sass&logoColor=white) Sass | 1.x | SCSS-Präprozessor für das Bento-Theme |
 | ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) GitHub Actions | — | CI: Release-Build, SFTP-Deploy, tägliches Redeploy |
 
 ## ✨ Funktionen
 
-- **Terminal-gestylter Hero** — eine `whoami`-Tippanimation in Vanilla JS (`src/main.js`)
+- **Bento-Layout** — animierte Kacheln, Hell/Dunkel-Umschalter, Skill-Reiter und aufklappbarer Werdegang in Vanilla JS (`src/main.js`); die Inhalte bleiben auch ohne JS lesbar
 - **Live-GitHub-Statistiken** — Contributions, Streaks, Contribution-Heatmap, Sprachverteilung und Featured Repos, gerendert aus `src/data/github-stats.json`
 - **Selbstgenerierende Sitemap** — ein eigenes Vite-Plugin scannt `dist` nach dem Build, überspringt `noindex`-Seiten und versieht jede URL mit dem Datum ihres letzten Commits
 - **Tag-getriggertes Deployment** — ein gepushter Versions-Tag baut die Seite und lädt sie per SFTP hoch; ein täglicher Cron-Job deployt das aktuellste Tag erneut, nachdem die GitHub-Statistiken aktualisiert wurden
@@ -72,6 +72,8 @@ Der Hoster muss `http://` sowie `www.cooolinho.de` mit **301** auf `https://cooo
 ### Meta-Tags & strukturierte Daten
 
 Alles befindet sich im `<head>` von `index.html`: `title`, `description`, `robots`, kanonische URL, Favicons, Open-Graph- / X-Card-Tags sowie ein JSON-LD-`@graph` mit `WebSite`, `ProfilePage` und `Person`. Bei Inhaltsänderungen müssen diese Angaben mit der sichtbaren Seite synchron bleiben. Wird ein Bild ausgetauscht, entweder die Abmessungen beibehalten oder `og:image:width`/`og:image:height` sowie `Person.image` anpassen.
+
+`og-image.png`, `favicon.ico` und `apple-touch-icon.png` werden aus `scripts/og-image/og-image.html` und `public/favicon.svg` gerendert. Nach Designänderungen mit `npx -y -p playwright@1 node scripts/og-image/render.mjs` neu erzeugen und die Bilder committen. Die Schriften liegen lokal in `src/fonts/` – es gehen keine Anfragen an Google Fonts.
 
 ### robots.txt
 
@@ -129,13 +131,14 @@ oder direkt über das Skript: `npm run stats` (mit `-- --dry-run` zur Vorschau o
 
 ```
 cooolinho.de/
-├── index.html                  # Hauptseite (Terminal-Layout, SEO-Meta-Tags, JSON-LD)
+├── index.html                  # Hauptseite (Bento-Layout, SEO-Meta-Tags, JSON-LD)
 ├── vite.config.js              # Build-Konfiguration + Sitemap-Plugin
 ├── .github/workflows/
 │   ├── deploy.yml              # Wiederverwendbarer Build+SFTP-Deploy-Job
 │   ├── release.yml             # Läuft bei gepushtem Versions-Tag
 │   └── daily.yml               # Tägliches Redeploy des aktuellsten Tags (Cron + manuell)
 ├── scripts/
+│   ├── og-image/                # Vorlage + Skript für og-image.png und die Icons
 │   ├── deploy.sh                # SFTP-Upload (von CI und `npm run deploy` genutzt)
 │   └── release.sh               # Taggt & pusht die nächste Version (`npm run release`)
 ├── docs/
@@ -146,8 +149,10 @@ cooolinho.de/
 │   ├── og-image.png             # 1200×630, Social-Media-Vorschau
 │   └── foto.png                 # Porträt, genutzt in JSON-LD (Person.image)
 ├── src/
-│   ├── main.js                  # Tippanimation, GitHub-Stats-Rendering, Smooth Scroll
-│   ├── style.scss               # Styles (SCSS, Terminal-Theme)
+│   ├── main.js                  # Animationen, Farbumschalter, Reiter, GitHub-Stats-Rendering
+│   ├── style.scss               # Styles (SCSS, Bento-Theme, Hell/Dunkel)
+│   ├── _fonts.scss              # @font-face-Regeln der lokalen Schriften
+│   ├── fonts/                   # Bricolage Grotesque + JetBrains Mono (woff2, OFL)
 │   └── data/github-stats.json   # Generiert von /update-github-infos oder `npm run stats`
 └── .claude/skills/update-github-infos/
     ├── SKILL.md                 # Claude-Code-Skill
