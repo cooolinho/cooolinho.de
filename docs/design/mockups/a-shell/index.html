@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entwurf A – Shell · cooolinho.de</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="../shared/content.js"></script>
+<style>
+:root {
+    --bg: #f3eee3; --panel: #fbf8f0; --line: #ddd4c2; --text: #2a2620; --muted: #776e5f;
+    --accent: #b4530a; --accent-2: #0f6f86; --ok: #4d7c0f; --sel: #f0e2c4;
+    --h0: #e6dfcf; --h1: #ecc98f; --h2: #dfa04a; --h3: #c9741a; --h4: #9a4a06;
+    --mono: 'JetBrains Mono', ui-monospace, monospace; --sans: 'IBM Plex Sans', system-ui, sans-serif;
+}
+[data-theme="dark"] {
+    --bg: #0e1016; --panel: #151922; --line: #262c3a; --text: #d9dee8; --muted: #7f8a9e;
+    --accent: #ffb454; --accent-2: #5ccfe6; --ok: #a5d86a; --sel: #23293a;
+    --h0: #1c212d; --h1: #5a421f; --h2: #94692a; --h3: #cf9140; --h4: #ffb454;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { background: var(--bg); color: var(--text); font: 400 16px/1.65 var(--sans); padding-bottom: 96px; overflow-x: hidden; }
+a { color: var(--accent-2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+ul, ol { list-style: none; }
+
+/* Statusleiste (tmux) */
+.bar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 16px;
+    background: var(--panel); border-bottom: 1px solid var(--line); font: 500 13px var(--mono); }
+.bar .session { background: var(--accent); color: var(--bg); padding: 3px 10px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
+.tabs { display: flex; gap: 2px; overflow-x: auto; flex: 1; scrollbar-width: none; }
+.tabs a { color: var(--muted); padding: 5px 10px; border-radius: 4px; white-space: nowrap; }
+.tabs a:hover { background: var(--sel); text-decoration: none; }
+.tabs a.on { color: var(--text); background: var(--sel); }
+.tabs a.on::after { content: '*'; color: var(--accent); }
+.bar button { font: inherit; color: var(--text); background: none; border: 1px solid var(--line); border-radius: 4px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
+.bar button:hover { border-color: var(--accent); color: var(--accent); }
+
+.layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); max-width: 1240px; margin: 0 auto; }
+.tree { position: sticky; top: 44px; align-self: start; height: calc(100vh - 44px); padding: 28px 16px; border-right: 1px solid var(--line);
+    font: 400 13px/2 var(--mono); color: var(--muted); }
+.tree b { color: var(--text); font-weight: 700; }
+.tree a { color: var(--muted); display: block; padding: 0 6px; border-radius: 4px; }
+.tree a::before { content: '├─ '; color: var(--line); }
+.tree a:last-of-type::before { content: '└─ '; }
+.tree a.on { color: var(--accent); background: var(--sel); }
+.tree .hint { margin-top: 28px; line-height: 1.7; font-size: 12px; }
+kbd { font: 500 11px var(--mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; color: var(--text); }
+
+main { padding: 0 40px; min-width: 0; }
+section { padding: 44px 0; border-bottom: 1px dashed var(--line); }
+section:last-child { border-bottom: 0; }
+
+/* Prompt-Zeile */
+.prompt { font: 500 14px var(--mono); color: var(--muted); margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 0 8px; }
+.prompt .user { color: var(--ok); }
+.prompt .path { color: var(--accent-2); }
+.prompt .cmd { color: var(--text); }
+.prompt .cmd::after { content: '▍'; color: var(--accent); margin-left: 2px; animation: blink 1s steps(1) infinite; }
+.prompt.done .cmd::after { content: none; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Ausgabe: zeilenweise einblenden */
+.js .out > * { opacity: 0; transform: translateY(8px); }
+.js .out.in > * { opacity: 1; transform: none; transition: opacity .45s ease, transform .45s ease; transition-delay: calc(var(--i, 0) * 70ms); }
+
+h1 { font: 800 clamp(2.6rem, 8vw, 5.4rem)/1 var(--mono); letter-spacing: -0.04em; margin-bottom: 28px; }
+h1 em { font-style: normal; color: var(--accent); }
+h3 { font: 700 1.05rem var(--mono); }
+.lead { font-size: 1.15rem; max-width: 64ch; }
+.lead + .lead { margin-top: 14px; }
+.lead b { font-weight: 600; color: var(--accent); }
+
+/* neofetch */
+.fetch { display: flex; gap: 28px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 24px; max-width: 760px; }
+.fetch img { width: 128px; height: 128px; border-radius: 10px; object-fit: cover; object-position: 50% 22%; border: 1px solid var(--line); flex: none; }
+.fetch dl { font: 400 13.5px/1.9 var(--mono); display: grid; grid-template-columns: auto 1fr; gap: 0 18px; min-width: 0; }
+.fetch .id { grid-column: 1 / -1; font-weight: 700; border-bottom: 1px dashed var(--line); margin-bottom: 6px; }
+.fetch .id span { color: var(--ok); }
+.fetch dt { color: var(--accent); font-weight: 700; }
+.fetch dd { overflow-wrap: anywhere; }
+.sw { grid-column: 1 / -1; display: flex; gap: 0; margin-top: 10px; }
+.sw i { width: 26px; height: 14px; }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; transition: border-color .2s, transform .2s; }
+.card:hover { border-color: var(--accent); transform: translateY(-3px); }
+.card .tag { font: 500 11px var(--mono); color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.card h3 { margin: 6px 0 10px; }
+.card p { font-size: .95rem; color: var(--muted); }
+.card .meta { font: 500 12px var(--mono); color: var(--ok); margin-top: 14px; }
+.file { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.file header { font: 500 12px var(--mono); color: var(--muted); padding: 8px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 8px; }
+.file .body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
+.file h3 { overflow-wrap: anywhere; margin-bottom: 8px; }
+.file h3 a { color: var(--text); }
+.file h3 a::after { content: ' ↗'; color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 14px; }
+.chip { font: 500 12px var(--mono); border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; color: var(--muted); }
+.chip.hl { color: var(--accent); border-color: var(--accent); }
+
+.ls li { display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ls li:last-child { border-bottom: 0; }
+.ls .dir { font: 700 14px var(--mono); color: var(--accent-2); }
+.ls .dir small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+.ls .chips { margin: 0; padding: 0; }
+
+/* Git-Graph */
+.log li { position: relative; padding: 0 0 30px 64px; }
+.log li::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+.log li:last-child::before { bottom: auto; height: 14px; }
+.log li::after { content: ''; position: absolute; left: 5px; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--accent); }
+.log li.side::after { left: 31px; border-color: var(--accent-2); }
+.log li.side .branch { position: absolute; left: 12px; top: -12px; bottom: 16px; width: 26px; border: 2px solid var(--accent-2); border-left: 0; border-radius: 0 16px 16px 0; }
+.log .head { font: 500 13px var(--mono); display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.log .hash { color: var(--accent); font-weight: 700; }
+.log .ref { color: var(--accent-2); }
+.log h3 { font-family: var(--sans); font-weight: 600; font-size: 1.15rem; margin: 2px 0; }
+.log .org { color: var(--muted); font-size: .95rem; }
+.log ul { margin-top: 8px; font-size: .95rem; }
+.log ul li { padding: 0 0 2px 18px; }
+.log ul li::before { content: '+'; background: none; color: var(--ok); left: 0; width: auto; font-family: var(--mono); }
+.log ul li::after { content: none; }
+.log .stack { font: 400 12px var(--mono); color: var(--muted); margin-top: 8px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.stat b { display: block; font: 800 2rem/1.1 var(--mono); color: var(--accent); }
+.stat span { font: 400 12px var(--mono); color: var(--muted); }
+.heat { display: grid; grid-template-rows: repeat(7, 1fr); grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; margin-bottom: 22px; max-width: 780px; }
+.heat i { aspect-ratio: 1; border-radius: 2px; background: var(--h0); }
+.heat .l1 { background: var(--h1); } .heat .l2 { background: var(--h2); } .heat .l3 { background: var(--h3); } .heat .l4 { background: var(--h4); }
+.heat .none { background: none; }
+.js .heat i { opacity: 0; }
+.js .in .heat i { opacity: 1; transition: opacity .3s; transition-delay: calc(var(--w, 52) * 22ms + 300ms); }
+.langs li { display: grid; grid-template-columns: 110px 1fr 44px; gap: 12px; align-items: center; font: 400 13px/2 var(--mono); }
+.langs .track { height: 8px; background: var(--h0); border-radius: 2px; overflow: hidden; }
+.langs .fill { display: block; height: 100%; width: var(--p); background: var(--accent); transform-origin: left; }
+.js .langs .fill { transform: scaleX(0); }
+.js .in .langs .fill { transform: none; transition: transform 1s cubic-bezier(.2, .8, .2, 1) .5s; }
+
+.contact { font: 700 clamp(1.2rem, 4.4vw, 2.4rem) var(--mono); overflow-wrap: anywhere; }
+.contact a { color: var(--accent); }
+.contact span { color: var(--muted); }
+
+/* Befehlszeile */
+.cmdbar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 30; width: min(760px, calc(100% - 24px));
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, .25); font: 500 14px var(--mono); }
+.cmdbar:focus-within { border-color: var(--accent); }
+.cmdbar form { display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+.cmdbar label { color: var(--accent); font-weight: 800; }
+.cmdbar input { flex: 1; min-width: 0; font: inherit; color: var(--text); background: none; border: 0; outline: 0; }
+.cmdbar input::placeholder { color: var(--muted); }
+.cmdbar .reply { padding: 10px 14px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+.cmdbar .reply b { color: var(--accent-2); cursor: pointer; }
+.cmdbar .reply:empty { display: none; }
+
+@media (max-width: 900px) {
+    .layout { display: block; }
+    .tree { display: none; }
+    main { padding: 0 18px; }
+    section { padding: 32px 0; }
+    .grid3, .stats { grid-template-columns: 1fr 1fr; }
+    .ls li { grid-template-columns: 1fr; gap: 8px; }
+    .cmdbar kbd { display: none; }
+}
+@media (max-width: 560px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .fetch { flex-direction: column; align-items: flex-start; padding: 18px; }
+    .fetch img { width: 84px; height: 84px; }
+    .fetch dl { font-size: 12.5px; gap: 0 12px; }
+    .log li { padding-left: 52px; }
+    .langs li { grid-template-columns: 90px 1fr 40px; }
+    .bar .session { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="bar">
+    <span class="session">[cooolinho]</span>
+    <nav class="tabs" id="tabs" aria-label="Bereiche"></nav>
+    <button type="button" data-theme-toggle aria-label="Hell/Dunkel umschalten">◐ theme</button>
+</header>
+
+<div class="layout">
+    <aside class="tree" aria-hidden="true">
+        <b>~/cooolinho.de</b>
+        <div id="tree"></div>
+        <p class="hint"><kbd>/</kbd> Befehlszeile<br><kbd>Tab</kbd> vervollständigen<br><kbd>Esc</kbd> schließen</p>
+    </aside>
+    <main id="main"></main>
+</div>
+
+<div class="cmdbar" data-fixed>
+    <div class="reply" id="reply" aria-live="polite"></div>
+    <form id="cmd" autocomplete="off">
+        <label for="cmd-input">❯</label>
+        <input id="cmd-input" type="text" placeholder="Befehl eingeben – z. B. help, projects, theme" spellcheck="false" aria-label="Befehlszeile">
+        <kbd>/</kbd>
+    </form>
+</div>
+
+<script>
+const S = window.SITE;
+const hl = (text) => S.highlight.reduce((out, word) => out.replaceAll(word, `<b>${word}</b>`), text);
+const chips = (items) => `<div class="chips">${items.map((item) => `<span class="chip${S.highlight.includes(item) ? ' hl' : ''}">${item}</span>`).join('')}</div>`;
+
+const sections = [
+    { id: 'whoami', cmd: 'whoami', title: 'Start', html: `
+        <h1>Colin Deepe<em>_</em></h1>
+        <div class="fetch">
+            <img src="${S.photo}" alt="Avatar von Colin Deepe" width="128" height="128">
+            <dl>
+                <div class="id"><span>colin</span>@<span>cooolinho</span></div>
+                <dt>Rolle</dt><dd>${S.role}</dd>
+                <dt>Aktuell</dt><dd>${S.current}</dd>
+                <dt>Praxis</dt><dd>10+ Jahre E-Commerce &amp; Web</dd>
+                <dt>Stack</dt><dd>Laravel · Filament · Symfony · Shopware</dd>
+                <dt>KI</dt><dd>Claude Code · GitHub Copilot CLI</dd>
+                <dt>GitHub</dt><dd>${S.stats.repos} Repos · ${S.stats.contributions} Contributions / 12 Mon.</dd>
+                <div class="sw">${['--accent', '--accent-2', '--ok', '--h2', '--muted', '--text'].map((c) => `<i style="background:var(${c})"></i>`).join('')}</div>
+            </dl>
+        </div>` },
+    { id: 'about', cmd: 'cat about.md', title: 'Über mich', html: S.about.map((p) => `<p class="lead">${hl(p)}</p>`).join('') },
+    { id: 'focus', cmd: 'cat focus.md', title: 'Fokus', html: `<div class="grid3">${S.focus.map((f) => `
+        <article class="card"><span class="tag">[ focus ]</span><h3>${f.title}</h3><p>${f.text}</p><p class="meta">› ${f.count} Projekte auf GitHub</p></article>`).join('')}</div>` },
+    { id: 'projects', cmd: 'ls projects/ --long', title: 'Projekte', html: `<div class="grid3">${S.projects.map((p) => `
+        <article class="card file"><header><span>README.md</span><span>${p.kind}</span></header>
+        <div class="body"><h3><a href="${p.url}" target="_blank" rel="noopener">${p.name}</a></h3><p>${p.text}</p>${chips(p.tags)}</div></article>`).join('')}</div>` },
+    { id: 'skills', cmd: 'tree skills/ -L 1', title: 'Skills', html: `<ul class="ls">${S.skills.map((g) => `
+        <li><span class="dir">${g.dir}/<small>${g.items.length} Einträge</small></span>${chips(g.items)}</li>`).join('')}</ul>` },
+    { id: 'career', cmd: 'git log --graph --career', title: 'Werdegang', html: `<ol class="log">${S.career.map((c, i) => `
+        <li class="${c.side ? 'side' : ''}">${c.side ? '<span class="branch"></span>' : ''}
+            <p class="head"><span class="hash">${c.from}</span><span class="ref">(${i === 0 ? 'HEAD → heute' : c.side ? 'freelance · bis ' + c.to : 'bis ' + c.to})</span></p>
+            <h3>${c.title}</h3><p class="org">${c.org}</p>
+            ${c.points.length ? `<ul>${c.points.map((pt) => `<li>${pt}</li>`).join('')}</ul>` : ''}
+            ${c.stack ? `<p class="stack">stack: ${c.stack}</p>` : ''}
+        </li>`).join('')}</ol>
+        <div class="card" style="margin-top:8px"><span class="tag">[ ehrenamt · ${S.volunteer.since} ]</span><h3>${S.volunteer.title}</h3>
+        <p>${S.volunteer.org} — ${S.volunteer.points.join(' · ')}</p></div>` },
+    { id: 'github', cmd: 'gh stats cooolinho', title: 'GitHub', html: `
+        <div class="stats">${[[S.stats.contributions, 'Contributions / 12 Mon.'], [S.stats.repos, 'eigene Repos'], [S.stats.stars, 'Stars'], [S.stats.activeDays, 'aktive Tage']]
+            .map(([n, label]) => `<div class="stat"><b data-count="${n}">${n}</b><span>${label}</span></div>`).join('')}</div>
+        ${heatmapHTML(S.stats.heatmap)}
+        <ul class="langs">${S.stats.languages.map(([name, p]) => `<li><span>${name}</span><span class="track"><span class="fill" style="--p:${p}%"></span></span><span>${p}%</span></li>`).join('')}</ul>` },
+    { id: 'contact', cmd: 'cat contact.txt', title: 'Kontakt', html: `
+        <p class="contact"><span>mail&nbsp;&nbsp; → </span><a href="mailto:${S.email}">${S.email}</a></p>
+        <p class="contact"><span>github → </span><a href="${S.github}" target="_blank" rel="me noopener">github.com/${S.handle}</a></p>` },
+];
+
+document.getElementById('main').innerHTML = sections.map((s) => `
+    <section id="${s.id}" aria-label="${s.title}">
+        <p class="prompt"><span class="user">colin@cooolinho</span><span class="path">~</span><span>❯</span><span class="cmd" data-cmd="${s.cmd}"></span></p>
+        <div class="out">${s.html}</div>
+    </section>`).join('');
+document.querySelectorAll('.out').forEach((out) => [...out.children].forEach((child, i) => child.style.setProperty('--i', i)));
+document.getElementById('tabs').innerHTML = sections.map((s, i) => `<a href="#${s.id}" data-nav="${s.id}">${i}:${s.id}</a>`).join('');
+document.getElementById('tree').innerHTML = sections.map((s) => `<a href="#${s.id}" data-nav="${s.id}">${{ whoami: 'whoami', about: 'about.md', focus: 'focus.md', projects: 'projects/', skills: 'skills/', career: 'career.log', github: 'github.json', contact: 'contact.txt' }[s.id]}</a>`).join('');
+
+// Befehl tippen, danach Ausgabe einblenden
+onReveal('section', (section) => {
+    const cmd = section.querySelector('.cmd');
+    const text = cmd.dataset.cmd;
+    const finish = () => {
+        cmd.textContent = text;
+        section.querySelector('.prompt').classList.add('done');
+        section.querySelector('.out').classList.add('in');
+        section.querySelectorAll('[data-count]').forEach(countUp);
+    };
+    if (REDUCED) return finish();
+    let i = 0;
+    const timer = setInterval(() => { cmd.textContent = text.slice(0, ++i); if (i >= text.length) { clearInterval(timer); setTimeout(finish, 160); } }, 38);
+});
+
+// aktiven Bereich in Statusleiste und Dateibaum markieren
+const spy = new IntersectionObserver((entries) => entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    document.querySelectorAll('[data-nav]').forEach((link) => link.classList.toggle('on', link.dataset.nav === entry.target.id));
+}), { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('section').forEach((section) => spy.observe(section));
+
+// Befehlszeile
+const input = document.getElementById('cmd-input');
+const reply = document.getElementById('reply');
+const names = sections.map((s) => s.id);
+const all = [...names, 'help', 'theme', 'mail', 'clear'];
+const say = (html) => { reply.innerHTML = html; };
+function run(raw) {
+    const cmd = raw.trim().toLowerCase().replace(/^(cd|cat|ls|open)\s+/, '').replace(/[\/.].*$/, '');
+    if (!cmd || cmd === 'clear') return say('');
+    if (cmd === 'help') return say('Befehle: ' + all.map((name) => `<b>${name}</b>`).join(' · '));
+    if (cmd === 'theme') { toggleTheme(); return say(`theme → ${document.documentElement.dataset.theme}`); }
+    if (cmd === 'mail') { location.href = `mailto:${S.email}`; return say(`öffne Mail an ${S.email} …`); }
+    if (names.includes(cmd)) { document.getElementById(cmd).scrollIntoView(); return say(`→ ${cmd}`); }
+    say(`command not found: ${raw.replace(/[<>&]/g, '')} — versuch <b>help</b>`);
+}
+document.getElementById('cmd').addEventListener('submit', (e) => { e.preventDefault(); run(input.value); input.value = ''; });
+reply.addEventListener('click', (e) => { if (e.target.tagName === 'B') run(e.target.textContent); });
+input.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' && input.value) { const hit = all.find((name) => name.startsWith(input.value.toLowerCase())); if (hit) { e.preventDefault(); input.value = hit; } }
+    if (e.key === 'Escape') { say(''); input.blur(); }
+});
+document.addEventListener('keydown', (e) => {
+    if ((e.key === '/' || (e.key === 'k' && (e.ctrlKey || e.metaKey))) && document.activeElement !== input) { e.preventDefault(); input.focus(); }
+});
+</script>
+</body>
+</html>
